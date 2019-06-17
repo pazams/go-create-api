@@ -1,0 +1,35 @@
+# Only edit app-subst.yaml file.
+# app.yaml is generated from it to avoid committing sensitive values.
+# See README on how to substitute sensitive values.
+
+runtime: go112
+
+env_variables:
+
+  # PORT: given by GAE
+  APP_ENV: GAE
+  API_TOKEN: ${API_TOKEN}
+  POSTGRES_GCP_CONNECTION_NAME: ${POSTGRES_GCP_CONNECTION_NAME}
+  POSTGRES_DATABASE: api6
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+
+
+main: ./cmd/server
+
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+# All URLs beginning with /stylesheets are treated as paths to
+# static files in the stylesheets/ directory.
+- url: /stylesheets
+  static_dir: stylesheets
+
+# All URLs beginning with /scripts are treated as paths to
+# static files in the scripts/ directory.
+- url: /scripts
+  static_dir: scripts
