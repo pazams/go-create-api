@@ -6,7 +6,7 @@ An template for a go JSON api with Google App Engine ready deployment.
 ## Features
 - DI with google/wire
 - Integration tests are written in a different language (JS) - makes it harder to cheat the black box.
-- Tests side effects needed for tests (e.g. migrate DB down and up), are decoupled into a separate binary.
+- System side effects needed only for tests (e.g. migrate DB down and up), are decoupled into a separate binary.
 
 ## How 
 
