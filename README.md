@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/pazams/go-create-api.svg?branch=master)](https://travis-ci.com/pazams/go-create-api)
+
 # Create Go API
 
 ## What
