@@ -10,7 +10,7 @@ As of Go version 1.11, GAE offers a standard environment that lifts all previous
 
 ## Features
 - Dependency injection with `google/wire`
-- Integrates with postgres on [Cloud SQL](https://cloud.google.com/sql/), as well as local postgres for integration testing.
+- Integrates with postgres on [Cloud SQL](https://cloud.google.com/sql/), as well as local dockerised postgres for integration testing.
 - Integration tests are totally decoupled for app code. By using a different language (JS), it prevents reuse of struct definitions and enforces a black box approach.
 - System side effects needed only for tests (e.g. migrate DB down and up), are decoupled into a separate binary.
 
