@@ -33,27 +33,32 @@ $ perl -i -p -e 's/github.com\/pazams\/go-create-api/github.com\/<your-gh-handle
 
 ### Run
 ```bash 
-$ ./run.sh
+$ make serve
 ```
 
 ### Test
 ```bash 
-$ ./test.sh
+$ make test
 ```
 Note: while iterating on the tests, after running the test command, if the app code didn't change, we can just build and run the tests with while everything else is still running: `$ docker-compose up --build --no-deps test`
 
 ### Deploy
-First, expand GAE's config file `app.yaml` with secrets (avoids secrets commited to source control)
-```bash
-$ API_TOKEN=<the-api-token> POSTGRES_GCP_CONNECTION_NAME=<project:zone:instance> POSTGRES_PASSWORD=<the-password> envsubst < "app-subst.yaml" > "app.yaml"
+have these env vars set:
+```
+API_TOKEN=<the-api-token>
+POSTGRES_GCP_CONNECTION_NAME=<project_id:zone:instance>
+POSTGRES_PASSWORD=<the-password>
+GCP_PROJECT=<project_id>
 ```
 
-Then, deploy on GCP:
+Then, deploy with:
 ```bash
-$ GO111MODULE=on gcloud app deploy --project=<your-GCP-project>
+$ make deploy
 ```
+
+Note: 
+- `app-subst.yaml` is committed to source and does NOT have secrets expended
+- `app.yaml` is NOT committed to source control and does have secrets expended
 
 ## TODO
-- [ ] makefile
 - [ ] micro services?
-- [ ] better travis intergration (expand secrets and deploy to GAE from travis)?
