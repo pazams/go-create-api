@@ -20,8 +20,8 @@ func InitializeServer() (*Server, error) {
 	bookController := controllers.NewBookController(dal)
 	pongController := controllers.NewPongController()
 	apiAuthMiddleware := middlewares.NewAPIAuthMiddleware(configConfig)
-	optionsController := controllers.NewOptionsController(apiAuthMiddleware)
-	handler := NewRouter(bookController, pongController, optionsController, apiAuthMiddleware)
+	corsMiddleware := middlewares.NewCORSMiddleware(apiAuthMiddleware)
+	handler := NewRouter(bookController, pongController, apiAuthMiddleware, corsMiddleware)
 	server, err := NewServer(handler, dal, configConfig)
 	if err != nil {
 		return nil, err

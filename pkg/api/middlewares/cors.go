@@ -1,10 +1,8 @@
-package controllers
+package middlewares
 
 import (
 	"net/http"
 	"strings"
-
-	"github.com/pazams/go-create-api/pkg/api/middlewares"
 )
 
 const (
@@ -13,16 +11,16 @@ const (
 	accessControlAllowHeaders = "Access-Control-Allow-Headers"
 )
 
-// OptionsController  ..
-type OptionsController struct {
+// CORSMiddleware  ..
+type CORSMiddleware struct {
 	corsMethods string
 	corsHeaders string
 }
 
-// NewOptionsController ..
-func NewOptionsController(
-	apiMid *middlewares.APIAuthMiddleware,
-) *OptionsController {
+// NewCORSMiddleware ..
+func NewCORSMiddleware(
+	apiMid *APIAuthMiddleware,
+) *CORSMiddleware {
 
 	corsMethods := strings.Join(
 		[]string{
@@ -44,16 +42,22 @@ func NewOptionsController(
 		},
 		", ")
 
-	return &OptionsController{
+	return &CORSMiddleware{
 		corsMethods: corsMethods,
 		corsHeaders: corsHeaders,
 	}
 
 }
 
-// Options ..
-func (c *OptionsController) Options(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set(accessControlAllowMethods, c.corsMethods)
-	w.Header().Set(accessControlAllowHeaders, c.corsHeaders)
-	w.Header().Set(accessControlAllowOrigin, "*")
+// ServeHTTPMiddleware writes CORS headers
+func (m *CORSMiddleware) ServeHTTPMiddleware(rw http.ResponseWriter, req *http.Request, next func(http.ResponseWriter, *http.Request)) {
+	rw.Header().Set(accessControlAllowMethods, m.corsMethods)
+	rw.Header().Set(accessControlAllowHeaders, m.corsHeaders)
+	rw.Header().Set(accessControlAllowOrigin, "*")
+
+	if req.Method == http.MethodOptions {
+		return
+	}
+
+	next(rw, req)
 }

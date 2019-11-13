@@ -49,9 +49,9 @@ describe('integration tests', function() {
         })
         .expect(201)
         .then(res => { 
-          assert(res.body.author === author, true)
-          assert(res.body.title === title, true)
-          assert(!!res.body.id, true)
+          assert.deepStrictEqual(res.body.author, author)
+          assert.deepStrictEqual(res.body.title, title)
+          assert.deepStrictEqual(!!res.body.id, true)
         })
     });
   });
@@ -65,7 +65,7 @@ describe('integration tests', function() {
         .set('Accept', 'application/json')
         .expect(200)
         .then(res => { 
-          assert(res.body.length, count)
+          assert.deepStrictEqual(res.body.length, count)
         })
     });
   });
@@ -79,7 +79,7 @@ describe('integration tests', function() {
         .get(`/book/${specialBook.id}`)
         .expect(200)
         .then(res => { 
-          assert.deepEqual(res.body, specialBook)
+          assert.deepStrictEqual(res.body, specialBook)
         })
     });
   });
