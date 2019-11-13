@@ -55,7 +55,7 @@ func (m *CORSMiddleware) ServeHTTPMiddleware(rw http.ResponseWriter, req *http.R
 	rw.Header().Set(accessControlAllowHeaders, m.corsHeaders)
 	rw.Header().Set(accessControlAllowOrigin, "*")
 
-	if req.Method == "OPTIONS" {
+	if req.Method == http.MethodOptions {
 		return
 	}
 
