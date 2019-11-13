@@ -38,6 +38,8 @@ func NewOptionsController(
 	corsHeaders := strings.Join(
 		[]string{
 			apiMid.APIAuthHeaderKey(),
+			"Content-Type",
+			"Cache-Control",
 			// add more if needed
 		},
 		", ")
