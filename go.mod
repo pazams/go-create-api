@@ -9,6 +9,8 @@ require (
 	github.com/go-pg/pg v8.0.4+incompatible
 	github.com/google/wire v0.2.2
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
+	github.com/onsi/ginkgo v1.10.3 // indirect
+	github.com/onsi/gomega v1.7.1 // indirect
 	github.com/spf13/viper v1.4.0
 	golang.org/x/oauth2 v0.0.0-20190523182746-aaccbc9213b0 // indirect
 	google.golang.org/api v0.5.0 // indirect
