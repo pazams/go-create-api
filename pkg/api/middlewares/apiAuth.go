@@ -23,6 +23,11 @@ func NewAPIAuthMiddleware(c *config.Config) *APIAuthMiddleware {
 // ServeHTTPMiddleware ..
 func (m *APIAuthMiddleware) ServeHTTPMiddleware(rw http.ResponseWriter, req *http.Request, next func(http.ResponseWriter, *http.Request)) {
 
+	if req.Method == http.MethodOptions {
+		next(rw, req)
+		return
+	}
+
 	token := req.Header.Get(apiAuthHeaderKey)
 	if token != m.c.APIToken {
 		rw.Header().Set("Content-Type", "")

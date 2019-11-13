@@ -19,8 +19,8 @@ func InitializeServer() (*Server, error) {
 		config.New,
 		data.New,
 		middlewares.NewAPIAuthMiddleware,
+		middlewares.NewCORSMiddleware,
 		controllers.NewBookController,
-		controllers.NewOptionsController,
 		controllers.NewPongController,
 	)
 	return &Server{}, nil

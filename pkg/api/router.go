@@ -12,12 +12,11 @@ import (
 func NewRouter(
 	bc *controllers.BookController,
 	pc *controllers.PongController,
-	oc *controllers.OptionsController,
 	apiMid *middlewares.APIAuthMiddleware,
+	corsMid *middlewares.CORSMiddleware,
 ) http.Handler {
 	mux := powermux.NewServeMux()
-	core := mux.Route("/")
-	core.OptionsFunc(oc.Options)
+	core := mux.Route("/").Middleware(corsMid)
 
 	veririfedAPIToken := core.Middleware(apiMid)
 
