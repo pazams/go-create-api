@@ -29,7 +29,9 @@ $ perl -i -p -e 's/github.com\/pazams\/go-create-api/github.com\/<your-gh-handle
 - When adding code, if you get "pkg/api/wire_gen.go: not enough arguments in call to ..." it means we need to regenerate wiring.
 
 ### Build (updates go.mod)
-`$ make build`
+```bash
+$ make build
+```
 
 ### Run
 ```bash 
