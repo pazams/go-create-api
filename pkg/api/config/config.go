@@ -6,12 +6,14 @@ import (
 	"os"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	log "github.com/sirupsen/logrus"
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
 // Config holds the application configuration
 type Config struct {
 	AppPort          string
+	ProjectID        string
 	AppEnv           string
 	APIToken         string
 	PgConnectionName string
@@ -27,20 +29,22 @@ func New() (*Config, error) {
 	var err error
 
 	if os.Getenv("IS_GCP_CONFIG") != "" {
-		fmt.Println("using gcp config")
+		log.Info("using gcp config")
 		projectID := os.Getenv("GCP_PROJECT")
 		accessor, err = createGCPSecretAccessor(projectID) // TODO error if now proj Id
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		fmt.Println("using env config")
+		log.Info("using env config")
 		accessor = os.Getenv
 	}
 
 	return &Config{
 		// PORT var name is mendated by GAE https://cloud.google.com/appengine/docs/standard/go112/runtime
-		AppPort:          get("PORT", "", os.Getenv),
+		AppPort:   get("PORT", "", os.Getenv),
+		ProjectID: get("GCP_PROJECT", "", os.Getenv),
+
 		AppEnv:           get("APP_ENV", "", accessor),
 		APIToken:         get("API_TOKEN", "", accessor),
 		PgConnectionName: get("POSTGRES_GCP_CONNECTION_NAME", "", accessor), // GCP cloud SQL format "project:zone:instance"
@@ -64,13 +68,14 @@ func get(key, defaultValue string, accessor func(string) string) string {
 
 func createGCPSecretAccessor(projectID string) (func(string) string, error) {
 	if projectID == "" {
-		return nil, fmt.Errorf("No projectIDfound for accessing secrets")
+		return nil, fmt.Errorf("No projectID found for accessing secrets")
 	}
 
 	return func(key string) string {
 		value, err := accessGCPSecret(projectID, key)
+		// swalloing error because getter might have a default value
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 			return ""
 		}
 		return value

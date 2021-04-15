@@ -2,9 +2,11 @@ package api
 
 import (
 	"fmt"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/pazams/go-create-api/pkg/api/config"
 	"github.com/pazams/go-create-api/pkg/api/data"
@@ -22,6 +24,20 @@ func NewServer(
 	d *data.DAL,
 	c *config.Config,
 ) (*Server, error) {
+
+	// setup logging
+	if c.AppEnv == "GAE" {
+		h, err := NewStackDriverHook("app", c.ProjectID)
+		if err != nil {
+			return nil, err
+		}
+		log.AddHook(h)
+
+		// disalbe std logging
+		// See https://github.com/Sirupsen/logrus/issues/328
+		log.SetOutput(ioutil.Discard)
+		log.Info("Gcloud logging success")
+	}
 
 	err := d.MigrateUp()
 	if err != nil {
@@ -44,6 +60,6 @@ func NewServer(
 
 // Start starts the server
 func (s *Server) Start() {
-	log.Println(fmt.Sprintf("Running on %s", s.c.AppPort))
+	log.Infof("Running on %s", s.c.AppPort)
 	log.Fatal(s.srv.ListenAndServe())
 }
