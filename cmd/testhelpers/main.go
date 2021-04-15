@@ -14,7 +14,10 @@ import (
 
 func main() {
 
-	config := config.New()
+	config, err := config.New()
+	if err != nil {
+		panic(err)
+	}
 	dal := data.New(config)
 
 	http.HandleFunc("/reset-db", func(w http.ResponseWriter, r *http.Request) {

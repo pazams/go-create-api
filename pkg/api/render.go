@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // ResultFunc is like http.HandlerFunc but returns values
@@ -43,6 +43,6 @@ func renderEmpty(w http.ResponseWriter, status int) {
 }
 
 func renderError(w http.ResponseWriter, err error, status int) {
-	log.Println(fmt.Sprintf("%v: %v", status, err))
+	log.WithError(err).Error(status)
 	w.WriteHeader(status)
 }

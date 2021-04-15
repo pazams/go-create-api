@@ -1,3 +1,4 @@
 .env.yaml
 app.yaml
 integration-tests/node_modules
+main

@@ -15,7 +15,10 @@ import (
 // Injectors from wire.go:
 
 func InitializeServer() (*Server, error) {
-	configConfig := config.New()
+	configConfig, err := config.New()
+	if err != nil {
+		return nil, err
+	}
 	dal := data.New(configConfig)
 	bookController := controllers.NewBookController(dal)
 	pongController := controllers.NewPongController()

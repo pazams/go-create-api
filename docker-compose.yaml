@@ -20,6 +20,7 @@ services:
     restart: on-failure:5
     environment:
       - APP_ENV=LOCAL
+      - GCP_PROJECT=placeholder
       - PORT=3001
       - API_TOKEN=e6dc8eeefd0ac7
       - POSTGRES_GCP_CONNECTION_NAME=foo
@@ -39,6 +40,7 @@ services:
     restart: on-failure:5
     environment:
       - APP_ENV=LOCAL
+      - GCP_PROJECT=placeholder
       - PORT=3001
       - API_TOKEN=e6dc8eeefd0ac7
       - POSTGRES_GCP_CONNECTION_NAME=foo
