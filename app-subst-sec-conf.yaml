@@ -1,20 +1,10 @@
 # Only edit app-subst.yaml file or app-subst-sec-conf.
-# app.yaml is generated from it to avoid committing sensitive values.
-# See README on how to substitute sensitive values.
 
 runtime: go112
 
 env_variables:
-
   # PORT: given by GAE
-  APP_ENV: GAE
-  API_TOKEN: ${API_TOKEN}
-  POSTGRES_GCP_CONNECTION_NAME: ${POSTGRES_GCP_CONNECTION_NAME} # // GCP cloud SQL format "project:zone:instance"
-  POSTGRES_DATABASE: api6
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
-
+  IS_GCP_CONFIG=true
 
 main: ./cmd/server
 

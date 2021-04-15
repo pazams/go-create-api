@@ -6,6 +6,10 @@ build:
 deploy:
 	./__scripts/deploy.sh
 
+.PHONY: deploy-sec-conf
+deploy-sec-conf:
+	./__scripts/deploy-sec-conf.sh
+
 .PHONY: serve
 serve:
 	./__scripts/run.sh

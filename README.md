@@ -58,6 +58,12 @@ Then, deploy with:
 $ make deploy
 ```
 
+Alternatively, to use GCP secrets for configs
+have `GCP_PROJECT=` and `IS_GCP_CONFIG=true` and then
+```bash
+$ make deploy-sec-conf
+```
+
 Note: 
 - `app-subst.yaml` is committed to source and does NOT have secrets expended
 - `app.yaml` is NOT committed to source control and does have secrets expended
