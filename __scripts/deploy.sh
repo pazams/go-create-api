@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Currently it expects: API_TOKEN=<the-api-token> POSTGRES_GCP_CONNECTION_NAME=<project:zone:instance> POSTGRES_PASSWORD=<the-password>
+#See readme for each env vars to have set before running this script
 envsubst < "app-subst.yaml" > "app.yaml"
 
 GO111MODULE=on gcloud app deploy --project=$GCP_PROJECT

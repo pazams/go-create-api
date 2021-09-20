@@ -2,7 +2,7 @@
 # app.yaml is generated from it to avoid committing sensitive values.
 # See README on how to substitute sensitive values.
 
-runtime: go112
+runtime: go114
 
 env_variables:
 
@@ -10,10 +10,10 @@ env_variables:
   APP_ENV: GAE
   API_TOKEN: ${API_TOKEN}
   POSTGRES_GCP_CONNECTION_NAME: ${POSTGRES_GCP_CONNECTION_NAME} # // GCP cloud SQL format "project:zone:instance"
-  POSTGRES_DATABASE: api6
-  POSTGRES_USER: postgres
+  POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+  POSTGRES_USER: ${POSTGRES_USER}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
+  GCP_PROJECT: ${GCP_PROJECT}
 
 
 main: ./cmd/server

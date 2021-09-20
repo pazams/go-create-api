@@ -1,6 +1,6 @@
 .PHONY: build 
 build:
-	GO111MODULE=on CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build cmd/server/main.go
+	GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build cmd/server/main.go
 
 .PHONY: deploy
 deploy:

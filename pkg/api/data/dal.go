@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/proxy"
 	"github.com/go-pg/migrations"
 	"github.com/go-pg/pg"
 
@@ -28,7 +27,7 @@ func New(c *config.Config) *DAL {
 
 	if c.AppEnv == "GAE" {
 		options.Dialer = func(network, addr string) (net.Conn, error) {
-			return proxy.Dial(c.PgConnectionName)
+			return net.Dial("unix", fmt.Sprintf("/cloudsql/%s/.s.PGSQL.5432", c.PgConnectionName))
 		}
 	}
 

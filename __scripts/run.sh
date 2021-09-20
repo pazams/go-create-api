@@ -1,4 +1,5 @@
 #!/bin/bash
 
-docker-compose up --build --force-recreate start_app_dependencies && \ 
-docker-compose up --build --force-recreate app
+# use --force-recreate if needed
+docker-compose up --build start_app_dependencies && \ 
+docker-compose up --build app
