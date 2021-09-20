@@ -47,10 +47,15 @@ Note: while iterating on the tests, after running the test command, if the app c
 ### Deploy
 have these env vars set:
 ```
-API_TOKEN=<the-api-token>
-POSTGRES_GCP_CONNECTION_NAME=<project_id:zone:instance>
-POSTGRES_PASSWORD=<the-password>
-GCP_PROJECT=<project_id>
+APP_ENV= # LOCAL / PROD / GAE
+GCP_PROJECT= # only if APP_ENV=GAE
+PORT= # in GAE set by the environment
+API_TOKEN= # string
+POSTGRES_GCP_CONNECTION_NAME=  # only if APP_ENV=GAE <project_id:zone:instance>
+POSTGRES_ADDR=    #either or POSTGRES_GCP_CONNECTION_NAME
+POSTGRES_DATABASE=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
 ```
 
 Then, deploy with:

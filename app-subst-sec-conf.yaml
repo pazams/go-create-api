@@ -1,6 +1,6 @@
 # Only edit app-subst.yaml file or app-subst-sec-conf.
 
-runtime: go112
+runtime: go114
 
 env_variables:
   # PORT: given by GAE
