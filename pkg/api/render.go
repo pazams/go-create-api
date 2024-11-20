@@ -11,7 +11,7 @@ import (
 type resultFunc func(http.ResponseWriter, *http.Request) (int, interface{})
 
 // toHandler wraps a ResultFunc with a http.Handler func that handels the results and calls rendering logic
-func toHandler(rf resultFunc) http.Handler {
+func toHandler(rf resultFunc) func(http.ResponseWriter, *http.Request) {
 	f := func(w http.ResponseWriter, r *http.Request) {
 		status, i := rf(w, r)
 
@@ -27,7 +27,7 @@ func toHandler(rf resultFunc) http.Handler {
 		}
 
 	}
-	return http.HandlerFunc(f)
+	return f
 }
 
 func renderJSON(w http.ResponseWriter, model interface{}, status int) {

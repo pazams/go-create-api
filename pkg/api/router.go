@@ -3,38 +3,31 @@ package api
 import (
 	"net/http"
 
-	"github.com/AndrewBurian/powermux"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/pazams/go-create-api/pkg/api/config"
 	"github.com/pazams/go-create-api/pkg/api/controllers"
-	"github.com/pazams/go-create-api/pkg/api/middlewares"
 )
 
 // NewRouter ..
 func NewRouter(
-	bc *controllers.BookController,
-	pc *controllers.PongController,
-	apiMid *middlewares.APIAuthMiddleware,
-	corsMid *middlewares.CORSMiddleware,
+	ic *controllers.PingController,
+	c *config.Config,
 ) http.Handler {
-	mux := powermux.NewServeMux()
-	core := mux.Route("/").Middleware(corsMid)
+	r := chi.NewRouter()
 
-	veririfedAPIToken := core.Middleware(apiMid)
+	r.Use(middleware.RequestID)
+	if c.HasProxy {
+		r.Use(middleware.RealIP)
+	}
+	if c.AppEnv != "test" {
+		r.Use(middleware.Logger)
+	}
+	r.Use(middleware.Recoverer)
 
-	veririfedAPIToken.
-		Route("/ping").
-		Get(toHandler(pc.Pong))
+	r.Route("/v1", func(r chi.Router) {
+		r.Get("/ping", toHandler(ic.Ping))
+	})
 
-	veririfedAPIToken.
-		Route("/book").
-		Get(toHandler(bc.Books))
-
-	veririfedAPIToken.
-		Route("/book/:id").
-		Get(toHandler(bc.Book))
-
-	veririfedAPIToken.
-		Route("/book").
-		Post(toHandler(bc.InsertBook))
-
-	return mux
+	return r
 }

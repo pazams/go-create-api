@@ -1,57 +1,31 @@
 package config
 
 import (
-	"context"
 	"fmt"
 	"os"
-
-	secretmanager "cloud.google.com/go/secretmanager/apiv1"
-	log "github.com/sirupsen/logrus"
-	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
+	"strconv"
 )
 
 // Config holds the application configuration
 type Config struct {
-	AppPort          string
-	ProjectID        string
-	AppEnv           string
-	APIToken         string
-	PgConnectionName string
-	PgAddr           string
-	PgUser           string
-	PgPassword       string
-	PgDatabase       string
+	AppPort  string // any port number
+	AppEnv   string // "test" or other string
+	HasProxy bool   // "true" | "false" true should be set if deployed behind a reverse proxy. default to "false"
 }
 
 // New returns a new Config object
 func New() (*Config, error) {
-	var accessor func(string) string
-	var err error
+	accessor := os.Getenv
 
-	if os.Getenv("IS_GCP_CONFIG") != "" {
-		log.Info("using gcp config")
-		projectID := os.Getenv("GCP_PROJECT")
-		accessor, err = createGCPSecretAccessor(projectID) // TODO error if now proj Id
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		log.Info("using env config")
-		accessor = os.Getenv
+	hasProxy, err := strconv.ParseBool(get("HAS_PROXY", "false", accessor))
+	if err != nil {
+		return nil, err
 	}
 
 	return &Config{
-		// PORT var name is mendated by GAE https://cloud.google.com/appengine/docs/standard/go112/runtime
-		AppPort:   get("PORT", "", os.Getenv),
-		ProjectID: get("GCP_PROJECT", "", os.Getenv),
-
-		AppEnv:           get("APP_ENV", "", accessor),
-		APIToken:         get("API_TOKEN", "", accessor),
-		PgConnectionName: get("POSTGRES_GCP_CONNECTION_NAME", "", accessor), // GCP cloud SQL format "project:zone:instance"
-		PgAddr:           get("POSTGRES_ADDR", "default", accessor),         // for integration tests
-		PgUser:           get("POSTGRES_USER", "", accessor),
-		PgPassword:       get("POSTGRES_PASSWORD", "", accessor),
-		PgDatabase:       get("POSTGRES_DATABASE", "", accessor),
+		AppPort:  get("PORT", "", accessor),
+		AppEnv:   get("APP_ENV", "", accessor),
+		HasProxy: hasProxy,
 	}, nil
 }
 
@@ -64,44 +38,4 @@ func get(key, defaultValue string, accessor func(string) string) string {
 		return defaultValue
 	}
 	return value
-}
-
-func createGCPSecretAccessor(projectID string) (func(string) string, error) {
-	if projectID == "" {
-		return nil, fmt.Errorf("No projectID found for accessing secrets")
-	}
-
-	return func(key string) string {
-		value, err := accessGCPSecret(projectID, key)
-		// swalloing error because getter might have a default value
-		if err != nil {
-			log.Info(err)
-			return ""
-		}
-		return value
-	}, nil
-}
-
-func accessGCPSecret(projectID, key string) (string, error) {
-	name := fmt.Sprintf("projects/%s/secrets/%s/versions/latest", projectID, key)
-
-	// Create the client.
-	ctx := context.Background()
-	client, err := secretmanager.NewClient(ctx)
-	if err != nil {
-		return "", fmt.Errorf("failed to create secretmanager client: %v", err)
-	}
-
-	// Build the request.
-	req := &secretmanagerpb.AccessSecretVersionRequest{
-		Name: name,
-	}
-
-	// Call the API.
-	result, err := client.AccessSecretVersion(ctx, req)
-	if err != nil {
-		return "", fmt.Errorf("failed to access secret version: %v", err)
-	}
-
-	return string(result.Payload.Data), nil
 }
